@@ -1,4 +1,3 @@
-// userActions.js
 import * as actionTypes from './actionTypes';
 import api from '../services/api';
 
@@ -9,7 +8,10 @@ export const createUserSuccess = (user) => ({
 
 export const loginSuccess = (userData) => ({
   type: actionTypes.LOGIN_SUCCESS,
-  payload: userData,
+  payload: {
+    token: userData.token,
+    userId: userData.userId,
+  },
 });
 
 export const logoutSuccess = () => ({

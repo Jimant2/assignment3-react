@@ -1,11 +1,10 @@
-// Login.js
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, logout } from '../actions/userActions';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const userToken = useSelector(state => state.userToken);
+  const userToken = useSelector(state => state.user && state.user.userToken);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [loginMessage, setLoginMessage] = useState('');
@@ -25,9 +24,15 @@ const Login = () => {
   };
   
   const handleLogout = () => {
-    dispatch(logout(userToken));
-    setLoginMessage('Logout successful!');
+    if (userToken) {
+      dispatch(logout(userToken));
+      setIsLoggedIn(false);
+      setLoginMessage('Logout successful!');
+    } else {
+      setLoginMessage('You are not logged in.');
+    }
   };
+  
 
   return (
     <div>
