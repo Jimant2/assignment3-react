@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useEffect } from 'react';
+import { Provider, useDispatch } from 'react-redux';
+import configureStore from './store/configureStore';
+import Login from './components/Login';
+import CreateUser from './components/CreateUser';
+import Profile from './components/Profile';
+import HighScores from './components/HighScores';
+import PlayGame from './components/PlayGame';
+import { fetchAllUsers } from './actions/userActions';
+import { fetchGames, startNewGame } from './actions/gameActions';
 
-function App() {
+
+const AppWrapper = () => {
+  const store = configureStore();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+};
+
+const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAllUsers());
+    dispatch(fetchGames());
+  }, [dispatch]);
+
+  return (
+    <div>
+      <h1>Match Three Game - Assignment 3</h1>
+      {/* Add your routing logic here */}
+      <Login />
+      <CreateUser />
+      <Profile />
+      <HighScores />
+      <PlayGame />
     </div>
   );
-}
+};
 
-export default App;
+export default AppWrapper;
