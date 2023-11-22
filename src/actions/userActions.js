@@ -49,12 +49,16 @@ export const login = (credentials) => {
     try {
       const response = await api.post('/login', credentials);
       if (response.status === 200) {
+        // Save userId and token in local storage
+        localStorage.setItem('userId', response.data.userId);
+        localStorage.setItem('userToken', response.data.token);
+
         dispatch(loginSuccess(response.data));
       } else {
         throw new Error('Login failed');
       }
     } catch (error) {
-      throw error; 
+      throw error;
     }
   };
 };
@@ -62,6 +66,9 @@ export const login = (credentials) => {
 export const logout = (token) => {
   return async (dispatch) => {
     try {
+       localStorage.removeItem('userId');
+       localStorage.removeItem('userToken');
+ 
       await api.post(`/logout?token=${token}`);
       dispatch(logoutSuccess());
     } catch (error) {
@@ -74,9 +81,18 @@ export const fetchUser = (userId) => {
   return async (dispatch) => {
     try {
       const response = await api.get(`/users/${userId}`);
-      dispatch(fetchUserSuccess(response.data));
+      if (response.status === 200) {
+        dispatch(fetchUserSuccess(response.data));
+      } else {
+        if (response.status === 403) {
+          // Unauthorized 
+          console.error('Unauthorized access');
+        } else {
+          throw new Error('Failed to get user');
+        }
+      }
     } catch (error) {
-      // Handle error
+      console.error('Error in fetch method: ', error);
     }
   };
 };

@@ -4,13 +4,16 @@ import { fetchUser, updateUser } from '../actions/userActions';
 
 const Profile = () => {
   const dispatch = useDispatch();
+  const userId = localStorage.getItem('userId');
+  const userToken = localStorage.getItem('userToken');
   const currentUser = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
-    if (currentUser) {
-      dispatch(fetchUser(currentUser.id));
+    if (userId) {
+      // Perform any additional authentication checks if needed
+      dispatch(fetchUser(userId));
     }
-  }, [currentUser, dispatch]);
+  }, [userId, dispatch]);
 
   const handleUpdateProfile = () => {
     dispatch(updateUser(currentUser.id, { /* properties to update */ }));

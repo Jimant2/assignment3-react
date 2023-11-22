@@ -24,6 +24,10 @@ const userReducer = (state = initialState, action) => {
         };
 
     case actionTypes.FETCH_USER_SUCCESS:
+      return {
+        ...state,
+        currentUser: action.payload,
+      }
     case actionTypes.UPDATE_USER_SUCCESS:
       return {
         ...state,
